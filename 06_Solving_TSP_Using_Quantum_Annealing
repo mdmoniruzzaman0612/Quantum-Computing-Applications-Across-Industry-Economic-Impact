@@ -1,0 +1,376 @@
+# Chapter 6: Solving the Travelling Salesman Problem Using Quantum Annealing
+
+## 6.1 Introduction
+
+The Travelling Salesman Problem (TSP) is one of the most widely studied optimization problems because of its practical importance and computational complexity. Classical algorithms often struggle with large TSP instances due to the exponential growth of possible routes. Quantum Annealing offers an alternative approach by transforming the optimization problem into an energy minimization problem.
+
+Unlike gate-based quantum computers that execute sequences of quantum gates, D-Wave quantum computers solve optimization problems by searching for the lowest-energy configuration of a mathematical model. This chapter explains how a TSP instance is converted into a Quantum Annealing problem through the **Quadratic Unconstrained Binary Optimization (QUBO)** formulation and the corresponding **Hamiltonian** representation.
+
+---
+
+# 6.2 From Optimization Problem to Quantum Problem
+
+Quantum computers cannot directly solve a routing problem described using cities and roads.
+
+Instead, the optimization problem must first be translated into a mathematical form that the quantum hardware understands.
+
+The complete workflow is
+
+```
+Travelling Salesman Problem
+            ↓
+Binary Variables
+            ↓
+QUBO Formulation
+            ↓
+Hamiltonian
+            ↓
+Quantum Annealing
+            ↓
+Optimal Solution
+```
+
+Each stage gradually converts the original routing problem into an energy minimization problem.
+
+---
+
+# 6.3 Binary Decision Variables
+
+The first step is defining binary decision variables.
+
+Each variable answers a simple question:
+
+> Does city *i* appear at position *j* in the route?
+
+Mathematically,
+
+\[
+x_{ij}=
+\begin{cases}
+1 & \text{if city } i \text{ is visited at position } j\\
+0 & \text{otherwise}
+\end{cases}
+\]
+
+For example,
+
+consider six cities.
+
+The decision matrix contains
+
+6 × 6 = 36
+
+binary variables.
+
+Each variable represents one possible assignment.
+
+---
+
+# 6.4 Constraints
+
+The TSP has two important constraints.
+
+## Constraint 1
+
+Every city must appear exactly once.
+
+For each city,
+
+\[
+\sum_j x_{ij}=1
+\]
+
+---
+
+## Constraint 2
+
+Each position in the tour must contain exactly one city.
+
+For each tour position,
+
+\[
+\sum_i x_{ij}=1
+\]
+
+These constraints guarantee a valid travelling route.
+
+Instead of treating constraints separately,
+
+Quantum Annealing incorporates them directly into the optimization objective using penalty terms.
+
+---
+
+# 6.5 Quadratic Unconstrained Binary Optimization (QUBO)
+
+Quantum Annealers require optimization problems to be written as a **Quadratic Unconstrained Binary Optimization (QUBO)** model.
+
+A QUBO objective function has the form
+
+\[
+\min x^TQx
+\]
+
+where
+
+- \(x\) is the binary decision vector.
+- \(Q\) is the QUBO matrix.
+
+The QUBO matrix contains
+
+- travel distances,
+- objective values,
+- constraint penalties.
+
+Every optimization problem is therefore represented using only binary variables.
+
+---
+
+# 6.6 Constructing the QUBO Matrix
+
+The QUBO matrix combines two types of information.
+
+## Objective Function
+
+Minimize the total travel distance.
+
+## Penalty Terms
+
+Large penalties are added whenever
+
+- a city appears twice,
+- a city is skipped,
+- multiple cities occupy the same tour position.
+
+The optimization algorithm therefore minimizes both
+
+- travel distance
+- constraint violations
+
+simultaneously.
+
+This transformation allows the TSP to become an unconstrained optimization problem suitable for Quantum Annealing.
+
+---
+
+# 6.7 Hamiltonian Representation
+
+Once the QUBO matrix has been constructed,
+
+it is converted into a **Hamiltonian**.
+
+In physics,
+
+the Hamiltonian represents the total energy of a system.
+
+The Ising Hamiltonian commonly used by D-Wave is
+
+\[
+H=\sum_i h_i s_i+\sum_{i<j}J_{ij}s_is_j
+\]
+
+where
+
+- \(h_i\) are local biases,
+- \(J_{ij}\) represent couplings,
+- \(s_i\in\{-1,+1\}\).
+
+The objective now becomes
+
+> Find the lowest possible energy.
+
+The lowest-energy state corresponds to the optimal travelling route.
+
+---
+
+# 6.8 Quantum Annealing Process
+
+After constructing the Hamiltonian,
+
+the optimization begins.
+
+The quantum annealer starts with an initial Hamiltonian
+
+\[
+H_0
+\]
+
+whose ground state is easy to prepare.
+
+During annealing,
+
+the Hamiltonian gradually evolves into
+
+\[
+H_P
+\]
+
+which represents the optimization problem.
+
+The evolution follows
+
+\[
+H(t)=A(t)H_0+B(t)H_P
+\]
+
+Initially,
+
+\(A(t)\) dominates.
+
+Gradually,
+
+\(B(t)\) increases.
+
+If the evolution occurs sufficiently slowly,
+
+the quantum system remains close to its ground state throughout the computation.
+
+The final ground state represents the optimized solution.
+
+---
+
+# 6.9 Quantum Tunneling
+
+One important advantage of Quantum Annealing is **quantum tunneling**.
+
+Classical optimization algorithms often become trapped in
+
+local minima.
+
+These are solutions that appear good but are not globally optimal.
+
+Quantum tunneling enables the system to pass through energy barriers rather than climbing over them.
+
+As a result,
+
+the annealer can explore solution spaces more effectively.
+
+This behavior often leads to higher-quality optimization results.
+
+---
+
+# 6.10 Six-City Example
+
+Consider a simple problem involving six cities.
+
+The workflow becomes
+
+```
+6 Cities
+      ↓
+Distance Matrix
+      ↓
+Binary Variables
+      ↓
+QUBO Matrix
+      ↓
+Hamiltonian
+      ↓
+Quantum Annealing
+      ↓
+Shortest Route
+```
+
+The distance matrix stores pairwise travel distances.
+
+The QUBO matrix incorporates
+
+- route cost
+- constraints
+
+into a single optimization model.
+
+After annealing,
+
+the quantum computer returns one or more candidate routes.
+
+The best route corresponds to the minimum energy solution.
+
+---
+
+# 6.11 Quantum-Classical Hybrid Workflow
+
+Modern industrial optimization rarely relies entirely on quantum computation.
+
+Instead,
+
+hybrid workflows combine
+
+classical optimization
+
+and
+
+Quantum Annealing.
+
+A typical workflow is
+
+```
+Business Problem
+        ↓
+Data Collection
+        ↓
+Pre-processing
+        ↓
+QUBO Generation
+        ↓
+Quantum Annealing
+        ↓
+Candidate Solutions
+        ↓
+Classical Verification
+        ↓
+Final Decision
+```
+
+This hybrid strategy combines the strengths of both computing paradigms.
+
+---
+
+# 6.12 Advantages of Quantum Annealing
+
+Quantum Annealing offers several important advantages.
+
+These include
+
+- Efficient optimization
+- Quantum tunneling
+- Good scalability
+- Cloud accessibility
+- Industrial deployment
+- Mature software ecosystem
+
+Optimization problems involving scheduling,
+
+routing,
+
+manufacturing,
+
+and finance
+
+can benefit from this approach.
+
+---
+
+# 6.13 Current Limitations
+
+Despite its advantages,
+
+Quantum Annealing also has limitations.
+
+These include
+
+- Limited qubit connectivity
+- Noise
+- Embedding overhead
+- Restricted problem classes
+- Lack of universal programmability
+- Difficulty proving quantum advantage for every optimization problem
+
+Researchers continue improving both hardware and algorithms to overcome these challenges.
+
+---
+
+# 6.14 Chapter Summary
+
+This chapter explained how the Travelling Salesman Problem can be transformed into a Quantum Annealing problem. The discussion covered binary variables, constraint formulation, Quadratic Unconstrained Binary Optimization (QUBO), Hamiltonian representation, the Quantum Annealing process, quantum tunneling, and hybrid quantum-classical workflows.
+
+These concepts form the foundation for practical quantum optimization. The next chapter explores how these techniques are applied in real-world industries, including transportation, logistics, manufacturing, finance, healthcare, and energy, with a detailed case study of Deutsche Bahn.
