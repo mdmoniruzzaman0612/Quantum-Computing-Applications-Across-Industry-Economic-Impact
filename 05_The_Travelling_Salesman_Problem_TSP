@@ -1,0 +1,347 @@
+# Chapter 5: The Travelling Salesman Problem (TSP)
+
+## 5.1 Introduction
+
+The **Travelling Salesman Problem (TSP)** is one of the most extensively studied problems in combinatorial optimization and theoretical computer science. Since its formal introduction in the twentieth century, the TSP has become a benchmark for evaluating optimization algorithms, including classical heuristics, metaheuristics, and more recently, quantum optimization techniques.
+
+The problem appears deceptively simple: given a set of cities and the distances between them, determine the shortest possible route that visits each city exactly once before returning to the starting city.
+
+Although easy to describe, solving the TSP optimally becomes computationally difficult as the number of cities increases. This characteristic makes the TSP an excellent example of an **NP-hard optimization problem** and an ideal candidate for Quantum Annealing.
+
+---
+
+# 5.2 Problem Definition
+
+The Travelling Salesman Problem can be formally stated as follows:
+
+> A salesperson must visit every city exactly once and return to the starting city while minimizing the total travel distance or travel cost.
+
+The problem has two primary constraints:
+
+- Every city must be visited exactly once.
+- The route must return to the starting city.
+
+The objective is:
+
+- Minimize the total travel distance.
+
+Figure 5.1 (to be inserted) illustrates a simple TSP involving six cities.
+
+---
+
+# 5.3 Mathematical Formulation
+
+Suppose there are
+
+\[
+n
+\]
+
+cities.
+
+The distances between cities are represented by
+
+\[
+d_{ij}
+\]
+
+where
+
+\[
+d_{ij}
+\]
+
+denotes the distance from city
+
+\[
+i
+\]
+
+to city
+
+\[
+j.
+\]
+
+The objective function becomes
+
+\[
+\min \sum d_{ij}x_{ij}
+\]
+
+where
+
+- \(x_{ij}=1\) if the route travels from city \(i\) to city \(j\),
+- otherwise \(x_{ij}=0\).
+
+The optimization is performed while satisfying the constraints that each city has exactly one incoming edge and one outgoing edge.
+
+This mathematical formulation forms the foundation for later conversion into a **QUBO model**.
+
+---
+
+# 5.4 Growth of Complexity
+
+One reason the Travelling Salesman Problem is so important is its rapid increase in computational complexity.
+
+The number of possible tours for
+
+\[
+n
+\]
+
+cities is
+
+\[
+\frac{(n-1)!}{2}
+\]
+
+for symmetric TSP.
+
+Table 5.1 demonstrates the explosive growth.
+
+| Number of Cities | Possible Tours |
+|------------------|---------------:|
+| 4 | 3 |
+| 5 | 12 |
+| 6 | 60 |
+| 8 | 2,520 |
+| 10 | 181,440 |
+| 15 | 43,589,145,600 |
+| 20 | 60,822,550,204,416,000 |
+
+As the number of cities increases, evaluating every possible route rapidly becomes computationally impossible.
+
+This phenomenon is known as **combinatorial explosion**.
+
+---
+
+# 5.5 Why TSP is NP-Hard
+
+The Travelling Salesman Problem belongs to the class of **NP-hard problems**.
+
+Unlike polynomial-time problems,
+
+there is currently no known algorithm capable of solving every TSP instance efficiently.
+
+For small numbers of cities,
+
+optimal solutions can be obtained relatively easily.
+
+However,
+
+for realistic industrial problems involving hundreds or thousands of locations,
+
+the computational cost becomes enormous.
+
+This explains why companies frequently rely on approximation algorithms rather than exact solutions.
+
+Quantum optimization research aims to improve this situation by exploring new computational paradigms.
+
+---
+
+# 5.6 Real-World Applications
+
+Despite its theoretical origin,
+
+the Travelling Salesman Problem appears in numerous practical applications.
+
+### Logistics
+
+Companies such as DHL, UPS, Amazon, and FedEx must determine efficient delivery routes while minimizing transportation costs.
+
+---
+
+### Railway Transportation
+
+Rail operators, including Deutsche Bahn, optimize train scheduling, maintenance planning, and routing problems that resemble large TSP instances.
+
+---
+
+### Airline Scheduling
+
+Airlines optimize aircraft rotations, crew assignments, and airport scheduling.
+
+---
+
+### Manufacturing
+
+Factories determine the optimal order for machining operations and robotic assembly paths.
+
+---
+
+### Warehouse Automation
+
+Autonomous robots must determine efficient paths while collecting products from multiple storage locations.
+
+---
+
+### Healthcare
+
+Hospitals optimize ambulance routing, home healthcare visits, and laboratory sample transportation.
+
+These examples demonstrate that TSP is far more than an academic exercise—it is a fundamental industrial optimization problem.
+
+---
+
+# 5.7 Classical Solution Methods
+
+Several algorithms have been developed to solve TSP.
+
+## Brute Force
+
+The simplest method evaluates every possible tour.
+
+Advantages:
+
+- Guaranteed optimal solution.
+
+Disadvantages:
+
+- Computationally impractical for large instances.
+
+---
+
+## Dynamic Programming
+
+The Held-Karp algorithm reduces computational effort through overlapping subproblems.
+
+Advantages:
+
+- Exact solution.
+
+Disadvantages:
+
+- Still exponential.
+
+---
+
+## Branch and Bound
+
+Systematically eliminates routes that cannot produce better solutions.
+
+Advantages:
+
+- Exact optimization.
+
+Disadvantages:
+
+- Performance decreases rapidly with problem size.
+
+---
+
+## Nearest Neighbor
+
+A heuristic algorithm.
+
+The next closest city is selected at every step.
+
+Advantages:
+
+- Extremely fast.
+
+Disadvantages:
+
+- Often produces suboptimal routes.
+
+---
+
+## Genetic Algorithms
+
+Inspired by biological evolution.
+
+Solutions evolve through selection, crossover, and mutation.
+
+Advantages:
+
+- Effective for large problems.
+
+Disadvantages:
+
+- No guarantee of optimality.
+
+---
+
+## Simulated Annealing
+
+Inspired by the cooling process of metals.
+
+Gradually reduces randomness to converge toward high-quality solutions.
+
+Advantages:
+
+- Escapes local minima.
+
+Disadvantages:
+
+- Sensitive to parameter selection.
+
+---
+
+# 5.8 Limitations of Classical Methods
+
+Although classical algorithms continue to improve,
+
+they suffer from several limitations.
+
+These include
+
+- exponential computational complexity,
+- long execution times,
+- memory requirements,
+- difficulty escaping local minima,
+- limited scalability.
+
+Large optimization problems often require approximate rather than exact solutions.
+
+These challenges motivate the investigation of quantum optimization methods.
+
+---
+
+# 5.9 Why TSP is an Ideal Quantum Benchmark
+
+Researchers frequently use the Travelling Salesman Problem to evaluate quantum optimization techniques because
+
+- it is mathematically well understood,
+- it is NP-hard,
+- it can be converted into QUBO,
+- it appears in numerous industries,
+- solution quality is easy to compare.
+
+Many quantum optimization studies therefore use TSP as their benchmark problem.
+
+---
+
+# 5.10 Bridge to Quantum Optimization
+
+To solve the Travelling Salesman Problem using Quantum Annealing,
+
+the optimization problem must first be transformed into a mathematical representation suitable for a quantum computer.
+
+This involves several important steps:
+
+```
+Travelling Salesman Problem
+            ↓
+Binary Variables
+            ↓
+QUBO Model
+            ↓
+Hamiltonian
+            ↓
+Quantum Annealing
+            ↓
+Optimal Route
+```
+
+The transformation into a **Quadratic Unconstrained Binary Optimization (QUBO)** model is the key step that enables D-Wave quantum computers to process optimization problems.
+
+The next chapter explains this transformation in detail and describes how Quantum Annealing searches for minimum-energy solutions.
+
+---
+
+# 5.11 Chapter Summary
+
+This chapter examined the Travelling Salesman Problem, one of the most important benchmark problems in optimization research. The mathematical formulation, computational complexity, real-world applications, and classical solution methods were discussed. The chapter also explained why TSP is classified as an NP-hard problem and why it serves as an ideal candidate for Quantum Annealing.
+
+The next chapter focuses on the complete quantum optimization workflow, including QUBO formulation, Hamiltonian representation, Quantum Annealing, and a detailed six-city worked example using D-Wave technology.
